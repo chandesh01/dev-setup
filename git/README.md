@@ -1,107 +1,109 @@
-# Git Setup & Configuration Guide
+# Git Configuration Guide
 
-A complete, reusable Git setup for fresh systems, including authentication, hygiene files, backups, and dotfiles.
+A complete, reusable Git setup for fresh systems.
 
 * **Scope:** Git only (no tooling opinions)
-* **Note:** This guide avoids scripts because:
-  * Git config is global and stateful
-  * Manual commands are visible and reversible
-  * Less risk than automation
+* **Philosophy:** Manual commands over scripts (visible, reversible, state-aware).
 
-## 1. Install Git
+---
 
-### Windows
+## 1. Setup
+
+This section covers installation, authentication, and optimizing the environment for a fresh system.
+
+### Install Git
+
+**Windows**
 
 ```powershell
 winget install --id Git.Git
 ```
 
-> Restart PowerShell or Git Bash after installation.
+*Note: Restart PowerShell or Git Bash after installation.*
 
-### Linux (Arch)
+**Linux (Arch)**
 
 ```sh
 sudo pacman -S git
 ```
 
-### Linux (Ubuntu / Debian)
+**Linux (Ubuntu / Debian)**
 
 ```sh
 sudo apt update && sudo apt install git
 ```
 
-### macOS (Homebrew)
+**macOS (Homebrew)**
 
 ```sh
 brew install git
 ```
 
-### Verify Installation
+**Verify Installation**
 
 ```sh
 git --version
 ```
 
-## 2. Basic Configuration (Required)
+### Basic Configuration (Required)
 
 ```sh
 git config --global user.name "Your Name"
 git config --global user.email "you@email.com"
 ```
 
-### Default Branch Name
+**Default Branch Name**
 
 ```sh
 git config --global init.defaultBranch main
 ```
 
-## 3. Authentication with SSH (Strongly Recommended)
+### Authentication with SSH (Strongly Recommended)
 
-### Generate SSH Key
+**Generate SSH Key**
 
 ```sh
 ssh-keygen -t ed25519 -C "you@email.com"
 ```
 
-Press **Enter** for defaults.
-Set a passphrase if possible.
+* Press **Enter** for defaults.
+* Set a passphrase for extra security.
+* **Never** commit or share your private SSH key (`id_ed25519`).
 
-> Never commit or share your private SSH key (`id_ed25519`).
-
-### Start SSH Agent
+**Start SSH Agent**
 
 ```sh
 eval "$(ssh-agent -s)"
 ```
 
-> **Windows:** run this in **Git Bash**.
+*Windows users: Run this in **Git Bash**, not PowerShell.*
 
-### Add Key
+**Add Key to Agent**
 
 ```sh
 ssh-add ~/.ssh/id_ed25519
 ```
 
-### Copy Public Key
+**Copy Public Key**
 
 ```sh
 cat ~/.ssh/id_ed25519.pub
 ```
 
-Add it to:
+Copy the output and add it to:
 
-* GitHub → Settings → SSH and GPG keys
-* GitLab → Preferences → SSH Keys
+* **GitHub:** Settings → SSH and GPG keys
+* **GitLab:** Preferences → SSH Keys
 
-> Remove unused older keys.
-
-### Test Connection
+**Test Connection**
 
 ```sh
 ssh -T git@github.com
 ```
 
-## 4. Authentication with HTTPS (Alternative)
+### Authentication with HTTPS (Alternative)
+
+Use this only if SSH is blocked or unavailable.
 
 ```sh
 git clone https://github.com/username/repository.git
@@ -110,44 +112,44 @@ git clone https://github.com/username/repository.git
 When prompted:
 
 * **Username:** GitHub/GitLab username
-* **Password:** **Personal Access Token (PAT)**
+* **Password:** **Personal Access Token (PAT)** (Passwords are deprecated)
 
-### Cache Credentials
+**Cache Credentials**
 
 ```sh
 git config --global credential.helper cache
 ```
 
-> On Windows, Git uses **Credential Manager** by default.
-> This mainly affects Linux/macOS users.
+*Windows users: Git automatically uses the "Git Credential Manager".*
 
-## 5. Recommended Global Settings
+### Recommended Global Settings
 
-### Line Endings (Very Important)
+**Line Endings (Critical)**
+Inconsistent line endings cause "phantom" file changes.
 
-* **Windows**
+*Windows:*
 
 ```sh
 git config --global core.autocrlf true
 ```
 
-* **Linux / macOS**
+*Linux / macOS:*
 
 ```sh
 git config --global core.autocrlf input
 ```
 
-## 6. `.gitattributes` (Strong Recommendation)
+### `.gitattributes` (Strong Recommendation)
 
-Create `.gitattributes` in the repository root.
+Create a `.gitattributes` file in the **root of your repository** to force consistency regardless of user config.
 
-### Basic
+**Basic Template**
 
 ```gitattributes
 * text=auto
 ```
 
-### Stricter (Optional)
+**Strict Template (Optional)**
 
 ```gitattributes
 *.sh  text eol=lf
@@ -156,21 +158,19 @@ Create `.gitattributes` in the repository root.
 *.bat text eol=crlf
 ```
 
-## 7. Default Text Editor
+### Default Text Editor
+
+Set the editor Git uses for commit messages and rebases.
 
 ```sh
-git config --global core.editor "code --wait"   # VS Code
+git config --global core.editor "code --wait"   # VS Code (Recommended)
 git config --global core.editor "nano"          # Nano
-git config --global core.editor "edit"          # Windows Edit
+git config --global core.editor "vim"           # Vim
 ```
 
-## 8. Enable Color Output
+### Git Aliases
 
-```sh
-git config --global color.ui auto
-```
-
-## 9. Git Aliases
+Shortcuts for common commands.
 
 ```sh
 git config --global alias.st status
@@ -179,165 +179,224 @@ git config --global alias.br branch
 git config --global alias.ci commit
 ```
 
-### Log Alias
+**The "Super Log" Alias**
+Visualizes the commit history graph in the terminal.
 
 ```sh
-git config --global alias.lg "log --graph --abbrev-commit --decorate \
---format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) \
-%C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all"
+git config --global alias.lg "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all"
 ```
 
-Usage:
+*Usage:* `git lg`
+
+### `.gitignore` Strategy
+
+1. **Repository `.gitignore**`: Place at the root of a specific repo. Tracks project-specific ignores (e.g., `node_modules`, `dist/`). **Must be committed.**
+2. **Global `.gitignore**`: Place in your home directory. Tracks system-wide ignores (e.g., `.DS_Store`, `Thumbs.db`). **Never committed.**
+
+**Setup Global Ignore**
 
 ```sh
-git lg
-```
+# 1. Create the file
+touch ~/.gitignore_global
 
-## 10. Advanced (Optional but Useful)
-
-```sh
-git config --global fetch.prune true
-git config --global rerere.enabled true
-```
-
-## 11. Verify Configuration
-
-```sh
-git config --list
-git config --global user.name
-```
-
-## 12. `.gitignore` (Strong Recommendation)
-
-A `.gitignore` file **must be created per repository** and placed at the **root of that repository**.
-It controls **what files are ignored only for that repo**.
-
-You can **also** create a **global ignore** for files you *never* want to track in any repo.
-
-### Repository `.gitignore` (Required)
-
-Create a file named `.gitignore` at the **root of each repository**.
-
-Template: [`.gitignore`](./dotfiles/.gitignore)
-
-> `.gitignore` should be committed with the repository.
-
-### Global `.gitignore` (Optional but Recommended)
-
-A **global ignore** applies to **all repositories** on your system.
-Use it for OS files, editor junk, and personal preferences.
-
-Create [`.gitignore_global`](./dotfiles/.gitignore_global), then register it:
-
-```sh
+# 2. Register it with Git
 git config --global core.excludesfile ~/.gitignore_global
 ```
 
-and verify:
+### GPG Commit Signing (Traditional)
+
+Signs commits to verify your identity (shows "Verified" badge on GitHub).
+
+**1. Install GPG**
+
+* Linux: `sudo apt install gnupg`
+* macOS: `brew install gnupg`
+* Windows: `winget install GnuPG.GnuPG`
+
+**2. Generate Key**
 
 ```sh
-git config --global --get core.excludesfile
+gpg --full-generate-key
 ```
 
-* `.gitignore` → **per repository**, committed to Git
-* `.gitignore_global` → **per machine**, never committed
+* Select **RSA and RSA** (4096 bits).
+* **Important:** Email must match your GitHub/GitLab email exactly.
 
-If a file is **already tracked**, ignoring it won’t remove it:
+**3. Configure Git to Sign**
 
 ```sh
-git rm --cached filename
+git config --global user.signingkey <KEYID>
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
 ```
 
-## 13. Backup Git Configuration
+*(Run `gpg --list-secret-keys --keyid-format=long` to find your `<KEYID>`)*
 
-### Backup
+**4. Upload Public Key**
+
+```sh
+gpg --armor --export <KEYID>
+```
+
+Paste this block into GitHub/GitLab GPG settings.
+
+### SSH-Based Commit Signing (Modern Alternative)
+
+Simpler than GPG. Uses your existing SSH key. Requires Git 2.34+.
+
+**Enable SSH Signing**
+
+```sh
+git config --global gpg.format ssh
+git config --global commit.gpgsign true
+git config --global gpg.ssh.program ssh-keygen
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+```
+
+**Register Key**
+Upload the key content again to GitHub/GitLab, but select **"Signing Key"** instead of "Authentication Key".
+
+---
+
+## 2. Backup
+
+Critical steps to secure your configuration and identity files.
+
+### Backup Git Configuration
 
 ```sh
 cp ~/.gitconfig ~/gitconfig.backup
 cp ~/.gitignore_global ~/.gitignore_global.backup
+# Optional: backup entire config dir
 cp -r ~/.config/git ~/git-backup
 ```
 
-## 14. Restore Dotfiles (Fresh System)
+### Backup GPG Keys (Critical)
 
-### From Backup
+If you lose your private GPG key, you **cannot** sign as that identity again.
+
+**1. Identify Key ID**
 
 ```sh
-cp ~/.gitconfig.backup ~/.gitconfig
-cp ~/.gitignore_global.backup ~/.gitignore_global
-cp -r ~/git-backup ~/.config/git
+gpg --list-secret-keys --keyid-format=long
+# Look for the ID after 'sec rsa4096/' (e.g., ABC123456789)
+```
+
+**2. Export Private Key (Secure Storage Only)**
+
+```sh
+gpg --armor --export-secret-keys <KEYID> > gpg-private.key
+chmod 600 gpg-private.key
+```
+
+**3. Export Public Key**
+
+```sh
+gpg --armor --export <KEYID> > gpg-public.key
+```
+
+### Backup SSH Keys
+
+**1. Copy Keys**
+
+```sh
+cp ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.backup
+cp ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519.pub.backup
+```
+
+**2. Secure Permissions**
+
+```sh
+chmod 600 ~/.ssh/id_ed25519.backup
+```
+
+### Checklist: What to Backup
+
+* [ ] `~/.gitconfig`
+* [ ] `~/.gitignore_global`
+* [ ] SSH Private Key (Encrypted location)
+* [ ] GPG Private Key (Encrypted location)
+
+---
+
+## 3. Restore
+
+Steps to bring a fresh system to a working state using your backup files.
+
+### Restore Dotfiles
+
+*Assumes you have copied your backup files to the current directory.*
+
+```sh
+cp gitconfig.backup ~/.gitconfig
+cp gitignore_global.backup ~/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
 ```
 
-### From Dotfiles
+### Restore SSH Keys
+
+**1. Place Files**
 
 ```sh
-cp ./dotfiles/.gitconfig ~/.gitconfig
-cp ./dotfiles/.gitignore_global ~/.gitignore_global
-git config --global core.excludesfile ~/.gitignore_global
+mkdir -p ~/.ssh
+cp id_ed25519.backup ~/.ssh/id_ed25519
+cp id_ed25519.pub.backup ~/.ssh/id_ed25519.pub
 ```
 
-## What to Include / Exclude
-
-### Include
-
-* `.gitconfig`
-* `.gitignore_global`
-* `.gitattributes`
-
-### Never Include
-
-* SSH private keys (`~/.ssh/id_*`)
-* Stored credentials
-* System Git config
-
-## 15. Reset Git Configuration (Clean Slate)
-
-Use this when you want to **completely remove Git configuration** and start fresh.
-
-### 15.1 Inspect Existing Configuration (Important)
-
-Before deleting anything, see **what exists and where**:
+**2. Fix Permissions (Required)**
+SSH will reject keys with open permissions.
 
 ```sh
-git config --list --show-origin
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
 ```
 
-This shows whether a setting comes from:
+**3. specific Add to Agent**
 
-* system
-* global
-* local (repo)
+```sh
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
 
-### 15.2 Soft Reset (Recommended)
+### Restore GPG Keys
 
-Removes **common global settings** without deleting files.
+**1. Import Keys**
+
+```sh
+gpg --import gpg-private.key
+gpg --import gpg-public.key
+```
+
+**2. Restore Trust Level**
+Required to use the key without "Untrusted" warnings.
+
+```sh
+gpg --edit-key <KEYID>
+```
+
+Inside the `gpg>` prompt, type:
+
+1. `trust`
+2. `5` (Select "Ultimate")
+3. `quit`
+
+### Reset Git Configuration (Clean Slate)
+
+Use this only if you want to wipe the current machine's Git config before restoring.
+
+**Soft Reset (Unset Globals)**
 
 ```sh
 git config --global --unset-all user.name
 git config --global --unset-all user.email
-git config --global --unset-all init.defaultBranch
-git config --global --unset-all core.autocrlf
 git config --global --unset-all core.editor
-git config --global --unset-all color.ui
-git config --global --unset-all credential.helper
-git config --global --unset-all fetch.prune
-git config --global --unset-all rerere.enabled
+git config --global --unset-all core.autocrlf
 ```
 
-Remove all aliases:
+**Nuclear Reset (Delete Config Files)**
 
-```sh
-git config --global --remove-section alias
-```
-
-Use this if you want to **keep Git installed but reset behavior**.
-
-### 15.3 Nuclear Reset (Full Clean Slate)
-
-Deletes **all global Git configuration files**.
-
-#### Linux / macOS
+*Linux / macOS:*
 
 ```sh
 rm -f ~/.gitconfig
@@ -345,102 +404,9 @@ rm -rf ~/.config/git
 rm -f ~/.git-credentials
 ```
 
-#### Windows (PowerShell)
+*Windows (PowerShell):*
 
 ```powershell
 Remove-Item $HOME\.gitconfig -Force -ErrorAction SilentlyContinue
 Remove-Item $HOME\.config\git -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item $HOME\.git-credentials -Force -ErrorAction SilentlyContinue
-```
-
-This removes:
-
-* username / email
-* aliases
-* autocrlf
-* editor
-* credential helpers
-* stored HTTPS credentials
-
-Best option for **starting completely fresh**.
-
-### 15.4 Remove Repository-Local Config (Per Repo)
-
-Run **inside a repository**.
-
-⚠️ This affects only that repo.
-
-#### Nuclear (fast)
-
-```sh
-rm .git/config
-```
-
-#### Safer (selective)
-
-```sh
-git config --local --remove-section core
-git config --local --remove-section remote
-git config --local --remove-section branch
-```
-
-### 15.5 Remove System-Wide Git Config (Advanced)
-
-⚠️ Only if you know what you’re doing.
-
-#### Linux / macOS
-
-```sh
-sudo rm /etc/gitconfig
-```
-
-#### Windows (Git for Windows)
-
-```text
-C:\Program Files\Git\etc\gitconfig
-```
-
-### 15.6 Remove Stored Credentials
-
-#### Windows
-
-List credentials:
-
-```powershell
-cmdkey /list
-```
-
-Delete Git entries:
-
-```powershell
-cmdkey /delete:git:https://github.com
-cmdkey /delete:git:https://gitlab.com
-cmdkey /delete:git:https://dev.azure.com
-```
-
-#### macOS
-
-* Open **Keychain Access**
-* Remove GitHub / GitLab entries
-
-#### Linux
-
-```sh
-rm -f ~/.git-credentials
-```
-
-### 15.7 Verify Reset
-
-```sh
-git config --list
-```
-
-If nothing prints → **Git is fully reset**
-
-### TL;DR (Nuclear Reset)
-
-```sh
-rm -f ~/.gitconfig
-rm -rf ~/.config/git
-rm -f ~/.git-credentials
 ```
