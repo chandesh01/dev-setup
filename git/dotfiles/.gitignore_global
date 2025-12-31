@@ -1,0 +1,55 @@
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =========================
+# EDITORS & IDEs
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# =========================
+# SHELL / TERMINAL
+# =========================
+*.pid
+*.seed
+*.log
+
+# =========================
+# ENV / SECRETS (NEVER COMMIT)
+# =========================
+.env
+.env.*
+.envrc
+
+# =========================
+# PYTHON (GLOBAL ONLY)
+# =========================
+__pycache__/
+*.py[cod]
+
+# =========================
+# NODE / JS (GLOBAL ONLY)
+# =========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# MISC
+# =========================
+.cache/
+.history/
