@@ -5,6 +5,8 @@ A complete, reusable Git setup for fresh systems.
 * **Scope:** Git only (no tooling opinions)
 * **Philosophy:** Manual commands over scripts (visible, reversible, state-aware).
 
+> [`git learn`](https://git-scm.com/learn)
+
 ---
 
 ## 1. Setup
@@ -190,8 +192,8 @@ git config --global alias.lg "log --graph --abbrev-commit --decorate --format=fo
 
 ### `.gitignore` Strategy
 
-1. **Repository `.gitignore**`: Place at the root of a specific repo. Tracks project-specific ignores (e.g., `node_modules`, `dist/`). **Must be committed.**
-2. **Global `.gitignore**`: Place in your home directory. Tracks system-wide ignores (e.g., `.DS_Store`, `Thumbs.db`). **Never committed.**
+1. **Repository `.gitignore`**: Place at the root of a specific repo. Tracks project-specific ignores (e.g., `node_modules`, `dist/`). **Must be committed.**
+2. **Global `.gitignore`**: Place in your home directory. Tracks system-wide ignores (e.g., `.DS_Store`, `Thumbs.db`). **Never committed.**
 
 **Setup Global Ignore**
 
@@ -333,6 +335,15 @@ cp gitignore_global.backup ~/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
 ```
 
+*Restore from Github.*
+
+```sh
+cp ./dotfiles/.gitconfig ~/.gitconfig
+cp ./dotfiles/.gitignore_global ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+
 ### Restore SSH Keys
 
 **1. Place Files**
@@ -352,7 +363,7 @@ chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
 ```
 
-**3. specific Add to Agent**
+**3. Add to Agent**
 
 ```sh
 eval "$(ssh-agent -s)"
@@ -383,6 +394,12 @@ Inside the `gpg>` prompt, type:
 
 ### Reset Git Configuration (Clean Slate)
 
+**Inspect Existing Configuration**
+
+```sh
+git config --list --show-origin
+```
+
 Use this only if you want to wipe the current machine's Git config before restoring.
 
 **Soft Reset (Unset Globals)**
@@ -390,8 +407,14 @@ Use this only if you want to wipe the current machine's Git config before restor
 ```sh
 git config --global --unset-all user.name
 git config --global --unset-all user.email
-git config --global --unset-all core.editor
+git config --global --unset-all init.defaultBranch
 git config --global --unset-all core.autocrlf
+git config --global --unset-all core.editor
+git config --global --unset-all color.ui
+git config --global --unset-all credential.helper
+git config --global --unset-all fetch.prune
+git config --global --unset-all rerere.enabled
+git config --global --remove-section alias
 ```
 
 **Nuclear Reset (Delete Config Files)**
@@ -409,4 +432,30 @@ rm -f ~/.git-credentials
 ```powershell
 Remove-Item $HOME\.gitconfig -Force -ErrorAction SilentlyContinue
 Remove-Item $HOME\.config\git -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item $HOME\.git-credentials -Force -ErrorAction SilentlyContinue
+
 ```
+
+### Repository-Local Reset
+
+Inside a repository:
+
+```sh
+rm .git/config
+```
+
+Or selectively:
+
+```sh
+git config --local --remove-section core
+git config --local --remove-section remote
+git config --local --remove-section branch
+```
+
+Verify Reset
+
+```sh
+git config --list
+```
+
+If nothing prints → Git is fully reset.
