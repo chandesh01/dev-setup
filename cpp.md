@@ -26,7 +26,7 @@ pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
 pacman -S mingw-w64-ucrt-x86_64-clang mingw-w64-ucrt-x86_64-llvm mingw-w64-ucrt-x86_64-lldb
 ```
 
-Add to **Windows PATH**:
+[Add to **Windows PATH**](./NT/ADD-TO-PATH.md):
 
 ```text
 C:\msys64\ucrt64\bin
