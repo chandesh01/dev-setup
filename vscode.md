@@ -92,3 +92,9 @@ Add this to **`settings.json`**:
 This works **only if a formatter exists** for that language.
 
 ---
+
+### 3. Start with custom profile
+
+```sh
+code --user-data-dir="%USERPROFILE%\AppData\data\MIcrosoft\vscode\default\data" --extensions-dir=%USERPROFILE%\AppData\data\MIcrosoft\vscode\default\extensions"
+```
