@@ -3,20 +3,16 @@
 A **minimal, cross-platform** setup for **C / C++** using **VS Code**, with the option to use **GCC/G++** *or* **LLVM (Clang/Clang++)**.
 
 > [`VS Code C++ docs`](https://code.visualstudio.com/docs/languages/cpp)
----
-
 ## 1. Install a Toolchain
 
 You only need **one** compiler.
 You may install **both** if you want to switch.
 
----
-
 ## Windows
 
 ### Option A: **MSYS2 (UCRT64 – Recommended)**
 
-Install MSYS2 → open **MSYS2 UCRT64** terminal.
+Install [MSYS2](https://www.msys2.org/) → open **MSYS2 UCRT64** terminal.
 
 #### GCC / G++
 
@@ -36,8 +32,6 @@ Add to **Windows PATH**:
 C:\msys64\ucrt64\bin
 ```
 
----
-
 ### Option B: **WinLibs (Winget)**
 
 #### GCC / G++
@@ -54,8 +48,6 @@ winget install BrechtSanders.WinLibs.MCF.UCRT
 winget install BrechtSanders.WinLibs.POSIX.UCRT.LLVM
 ```
 
----
-
 ## Linux
 
 ### Ubuntu / Debian
@@ -71,8 +63,6 @@ Optional LLVM:
 sudo apt install clang lldb lld
 ```
 
----
-
 ### Arch Linux
 
 ```bash
@@ -85,8 +75,6 @@ Optional LLVM:
 sudo pacman -S --needed clang lldb lld
 ```
 
----
-
 ## macOS
 
 ```bash
@@ -94,8 +82,6 @@ xcode-select --install
 ```
 
 > macOS ships **clang** by default (`gcc` is an alias).
-
----
 
 ## 2. VS Code Setup
 
@@ -111,7 +97,7 @@ code --inatall-extention xaver.clang-format
 `Ctrl + ,`
 
 Search : `@ext:xaver.clang-format`
-Set `"clang-format.executable": "C:\\msys64\\ucrt64\\bin\\clang-format.exe"`
+Set `"clang-format.executable": "C:\msys64\ucrt64\bin\clang-format.exe"`
 
 ### Setup Compiler Explicitly
 
@@ -123,8 +109,6 @@ Set:
 * IntelliSense Mode updates automatically
 
 > VS Code works **without any config files** using auto-detection.
-
----
 
 ## 3. Compiling from the Command Line
 
@@ -145,8 +129,6 @@ gcc   -Wall -Wextra -g main.c -o main
 clang -Wall -Wextra -g main.c -o main
 ```
 
----
-
 ### C++
 
 ```sh
@@ -164,8 +146,6 @@ g++      -std=c++20 -Wall -Wextra -g main.cpp -o main
 clang++  -std=c++20 -Wall -Wextra -g main.cpp -o main
 ```
 
----
-
 ## 4. Using VS Code Tasks (Optional)
 
 ```text
@@ -174,16 +154,12 @@ Ctrl + Shift + B
 
 Runs the configured compiler command.
 
----
-
 ## 5. Running the Program
 
 ```sh
 ./main        # Linux / macOS
 ./main.exe    # Windows
 ```
-
----
 
 ## 6. Debugging (F5)
 
@@ -192,27 +168,3 @@ Runs the configured compiler command.
 
   * **gdb** → GCC
   * **lldb** → Clang
-
----
-
-## Best Practice
-
-| Use Case                     | Recommendation      |
-| ---------------------------- | ------------------- |
-| Learning / clean diagnostics | **Clang**           |
-| System compatibility         | **GCC**             |
-| macOS                        | **Clang (default)** |
-| Linux projects               | Either              |
-| Windows (UCRT)               | Either              |
-
----
-
-## Why Consider LLVM / Clang?
-
-* Clearer error messages
-* Better IDE integration
-* Faster debugger startup (`lldb`)
-* Modern tooling (`clang-format`, `clang-tidy`)
-* Same standards & performance as GCC
-
----

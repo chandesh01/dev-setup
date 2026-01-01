@@ -1,8 +1,6 @@
-# VS Code Project Template Guide
+# VS Code Starter
 
 A minimal, reusable **VS Code project setup** using explicit configuration files.
-
----
 
 ## 1. Handy VS Code Shortcuts (Must-Know)
 
@@ -15,8 +13,6 @@ A minimal, reusable **VS Code project setup** using explicit configuration files
 | **F5**               | Debug             |
 | **Shift + F5**       | Stop debugging    |
 
----
-
 ### Editing & Navigation
 
 | Shortcut             | Action                 |
@@ -26,9 +22,7 @@ A minimal, reusable **VS Code project setup** using explicit configuration files
 | **Ctrl + /**         | Toggle comment         |
 | **Alt + ↑ / ↓**      | Move line              |
 | **Ctrl + D**         | Select next occurrence |
-| **Ctrl + L**         | Select line            |
-
----
+| **Ctrl + L**         | Select entire line     |
 
 ### Terminal
 
@@ -38,17 +32,9 @@ A minimal, reusable **VS Code project setup** using explicit configuration files
 | **Ctrl + Shift + `** | New terminal         |
 | **Ctrl + C**         | Stop running process |
 
----
-
----
-
-Here’s how to **set up Auto Save + Format on Save in VS Code** (clean + reproducible).
-
----
-
 ## 2. Enable **Auto Save**
 
-### Option A: Using `settings.json` (Recommended)
+### Option A: `settings.json` (Recommended)
 
 Add this to **`.vscode/settings.json`** (project-specific)
 or **User Settings** (global):
@@ -60,26 +46,22 @@ or **User Settings** (global):
 }
 ```
 
-**Modes you can use:**
+**Auto Save modes**
 
-| Value              | Meaning                      |
-| ------------------ | ---------------------------- |
-| `"off"`            | Default (manual save)        |
-| `"afterDelay"`     | Auto save after delay (best) |
-| `"onFocusChange"`  | Save when switching files    |
-| `"onWindowChange"` | Save when switching windows  |
-
----
+| Value              | Meaning                     |
+| ------------------ | --------------------------- |
+| `"off"`            | Manual save (default)       |
+| `"afterDelay"`     | Auto save after delay       |
+| `"onFocusChange"`  | Save when switching files   |
+| `"onWindowChange"` | Save when switching windows |
 
 ### Option B: Command Palette (Quick)
 
 1. Press **Ctrl + Shift + P**
 2. Type **Auto Save**
-3. Select **File: TOggle Auto Save**
+3. Select **File: Toggle Auto Save**
 
----
-
-## 2. Enable **Format on Save**
+## 3. Enable **Format on Save**
 
 Add this to **`settings.json`**:
 
@@ -89,12 +71,63 @@ Add this to **`settings.json`**:
 }
 ```
 
-This works **only if a formatter exists** for that language.
+>  Works **only if a formatter is installed** for that language
+> (e.g. Prettier, clang-format, black, gofmt).
 
----
+**Recommended (safe) enhancement**
 
-### 3. Start with custom profile
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file"
+}
+```
 
-```sh
-code --user-data-dir="%USERPROFILE%\AppData\data\MIcrosoft\vscode\default\data" --extensions-dir=%USERPROFILE%\AppData\data\MIcrosoft\vscode\default\extensions"
+## 4. Start VS Code with a **Custom Profile (Isolated Data Dir)**
+
+Use this when you want a **clean, reproducible VS Code environment**.
+
+### Windows (PowerShell / CMD)
+
+```powershell
+code --user-data-dir "%USERPROFILE%\vscode-profiles\default\data" ^ --extensions-dir "%USERPROFILE%\vscode-profiles\default\extensions"
+```
+
+## 5. Update All Extensions (CLI)
+
+```powershell
+code --update-extensions
+```
+
+## 7. Minimal `.vscode/settings.json` (Baseline)
+
+> Save to: user-data-dir/user/settings.json
+
+```json
+{
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "cpp": false
+  },
+
+  "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+
+  "clang-format.executable": "C:/msys64/ucrt64/bin/clang-format.exe",
+
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.trimAutoWhitespace": true,
+
+  "files.trimTrailingWhitespace": true
+}
+
 ```
