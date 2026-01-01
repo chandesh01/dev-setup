@@ -1,58 +1,69 @@
-# Python Configuration Guide
+# Python Configuration Guide (CPython + venv)
 
-A minimal, cross-platform setup for **Python** using **CPython**, **virtual environments**, and **VS Code**.
+A **minimal, cross-platform** setup for **Python** using **CPython**, **virtual environments**, and **VS Code**.
 
-> [`Python docs`](https://docs.python.org/3/)
-> [`VS Code Python docs`](https://code.visualstudio.com/docs/python/python-tutorial)
+> Python docs: [https://docs.python.org/3/](https://docs.python.org/3/)
+> VS Code Python docs: [https://code.visualstudio.com/docs/python/python-tutorial](https://code.visualstudio.com/docs/python/python-tutorial)
 
-## 1. Installation
+## 1. Install Python (CPython)
 
-### Windows
+You only need **one Python installation**.
+Virtual environments handle isolation.
+
+## Windows
 
 ```powershell
 winget install --id Python.Python
 ```
 
-### Linux
+> Includes `pip` and the `py` launcher.
 
-#### Ubuntu / Debian
+## Linux
 
-```sh
+### Ubuntu / Debian
+
+```bash
 sudo apt update
 sudo apt install python3 python3-pip python3-venv
 ```
 
-#### Arch Linux
+### Arch Linux
 
-```sh
+```bash
 sudo pacman -S python python-pip
 ```
 
-### macOS
+## macOS
 
-```sh
+```bash
 brew install python
 ```
 
-### Verify
+## Verify Installation
 
 ```sh
 python --version
 pip --version
 ```
 
-> If `python` is not found but `python3` exists, use `python3`.
+If `python` is not found but `python3` exists, use:
+
+```sh
+python3 --version
+```
 
 ## 2. Virtual Environments (Required)
 
-**Rule:** Never install packages globally.
+**Rule:** Never install Python packages globally.
 
-### Create
+### Create a Virtual Environment
 
 ```sh
 cd project/
 python -m venv .venv
 ```
+
+This creates an isolated Python environment in `.venv/`
 
 ### Activate
 
@@ -68,7 +79,7 @@ source .venv/bin/activate
 .venv\Scripts\activate.ps1
 ```
 
-If blocked:
+If script execution is blocked:
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
@@ -82,38 +93,49 @@ deactivate
 
 ## 3. Dependency Management
 
-### Save
+### Save Dependencies
 
 ```sh
 pip freeze > requirements.txt
 ```
 
-### Restore
+### Restore Dependencies
 
 ```sh
 pip install -r requirements.txt
 ```
 
-## 4. Create `.gitignore`
+## 4. `.gitignore` (Required)
+
+Add at minimum:
+
+```gitignore
+.venv/
+__pycache__/
+*.pyc
+.env
+```
 
 ## 5. VS Code Setup
 
-### Install Extension
+### Install Extensions
 
 ```sh
 code --install-extension ms-python.python
 code --install-extension ms-python.black-formatter
 ```
 
-(Formatter and debugger are included.)
+> Debugger, IntelliSense, and linting are included.
 
-### Select Interpreter
+### Select Interpreter (Important)
 
 ```text
 Ctrl + Shift + P
 → Python: Select Interpreter
-→ Choose the one with .venv
+→ Choose the interpreter inside .venv
 ```
+
+> VS Code auto-detects `.venv` if it exists.
 
 ## 6. Running from the Command Line
 
@@ -123,31 +145,19 @@ Ctrl + Shift + P
 python main.py
 ```
 
-### Recommended (inside venv)
+### Recommended (Explicit)
 
 ```sh
 source .venv/bin/activate
 python main.py
 ```
 
-## 7. VS Code Configuration (Optional)
+## 7. VS Code Run & Debug
 
-Create:
-
-```text
-.vscode/
-├── settings.json
-├── tasks.json
-└── launch.json
-```
-
-VS Code also works **without these files** using defaults.
-
-## 8. Run & Debug (VS Code)
-
-### Run (no debugger)
+### Run (No Debugger)
 
 ```text
+Ctrl + Shift + B
 Ctrl + F5
 ```
 
@@ -157,43 +167,4 @@ Ctrl + F5
 F5
 ```
 
-## 9. Multiple Python Versions (Windows)
-
-```powershell
-py -0
-py -3.12
-```
-
-Create venv with specific version:
-
-```powershell
-py -3.12 -m venv .venv
-```
-
-## 10. Backup & Restore
-
-### Backup
-
-* `requirements.txt`
-* `.vscode/`
-* Source code
-
-### Restore on New System
-
-```sh
-git clone <repo_url>
-cd <repo_name>
-
-python -m venv .venv
-source .venv/bin/activate   # or .venv\Scripts\activate
-
-pip install -r requirements.txt
-```
-
-## Finally
-
-```sh
-python -m venv .venv
-source .venv/bin/activate
-python main.py
-```
+> Uses the selected `.venv` interpreter automatically.

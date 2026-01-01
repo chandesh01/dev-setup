@@ -1,0 +1,13 @@
+{
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "cpp": false
+    },
+    "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
+    "clang-format.executable": "C:\\msys64\\ucrt64\\bin\\clang-format.exe"
+}

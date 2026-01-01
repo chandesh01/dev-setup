@@ -1,9 +1,0 @@
-# .gitignore
-build/
-.vscode/
-.cache/
-*.exe
-*.out
-*.o
-*.dSYM/
-compile_commands.json
