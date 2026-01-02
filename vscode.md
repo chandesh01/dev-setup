@@ -2,6 +2,8 @@
 
 A minimal, reusable **VS Code project setup** using explicit configuration files.
 
+> [Install](https://code.visualstudio.com/)
+
 ## 1. Handy VS Code Shortcuts (Must-Know)
 
 ### Build / Run / Debug
@@ -23,6 +25,7 @@ A minimal, reusable **VS Code project setup** using explicit configuration files
 | **Alt + ↑ / ↓**      | Move line              |
 | **Ctrl + D**         | Select next occurrence |
 | **Ctrl + L**         | Select entire line     |
+| **Ctrl + ,**         | Settings               |
 
 ### Terminal
 
@@ -32,76 +35,45 @@ A minimal, reusable **VS Code project setup** using explicit configuration files
 | **Ctrl + Shift + `** | New terminal         |
 | **Ctrl + C**         | Stop running process |
 
-## 2. Enable **Auto Save**
+> [docs](https://code.visualstudio.com/docs/configure/keybindings#_keyboard-shortcuts-reference)
 
-### Option A: `settings.json` (Recommended)
+## 2. Start VS Code with a **Custom Profile (Isolated Data Dir)**
 
-Add this to **`.vscode/settings.json`** (project-specific)
-or **User Settings** (global):
+* **Create Directory**
 
-```json
-{
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000
-}
+```sh
+mkdir ~/vscode-profile && cd ~/vscode-profile
 ```
 
-**Auto Save modes**
+* **Default:**
 
-| Value              | Meaning                     |
-| ------------------ | --------------------------- |
-| `"off"`            | Manual save (default)       |
-| `"afterDelay"`     | Auto save after delay       |
-| `"onFocusChange"`  | Save when switching files   |
-| `"onWindowChange"` | Save when switching windows |
-
-### Option B: Command Palette (Quick)
-
-1. Press **Ctrl + Shift + P**
-2. Type **Auto Save**
-3. Select **File: Toggle Auto Save**
-
-## 3. Enable **Format on Save**
-
-Add this to **`settings.json`**:
-
-```json
-{
-  "editor.formatOnSave": true
-}
+```sh
+code --user-data-dir . --profile C --extensions-dir ./extentions
 ```
 
->  Works **only if a formatter is installed** for that language
-> (e.g. Prettier, clang-format, black, gofmt).
+* **C:**
 
-**Recommended (safe) enhancement**
-
-```json
-{
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file"
-}
+```sh
+code --user-data-dir . --profile C --extensions-dir ./extentions
 ```
 
-## 4. Start VS Code with a **Custom Profile (Isolated Data Dir)**
+* **Python:**
 
-Use this when you want a **clean, reproducible VS Code environment**.
-
-### Windows (PowerShell / CMD)
-
-```powershell
-code --user-data-dir "%USERPROFILE%\vscode-profiles\default\data" ^ --extensions-dir "%USERPROFILE%\vscode-profiles\default\extensions"
+```sh
+code --user-data-dir . --profile Python --extensions-dir ./extentions
 ```
 
-## 5. Update All Extensions (CLI)
+> To Create Using Templates: `Ctrl + Shift + P -> Preferences: Open Profiles (UI) -> New Profile (Dropdown) -> From Template`
+
+## 3. Update All Extensions (CLI)
 
 ```powershell
 code --update-extensions
 ```
 
-## 7. Minimal `.vscode/settings.json` (Baseline)
+## 4. Minimal `.vscode/settings.json` (Baseline)
 
-> Save to: user-data-dir/user/settings.json
+Open : `Ctrl + Shift + P` -> Preferences: Open User Settings (JSON)
 
 ```json
 {
@@ -129,5 +101,6 @@ code --update-extensions
 
   "files.trimTrailingWhitespace": true
 }
-
 ```
+
+> or save to: user-data-dir/user/settings.json

@@ -75,6 +75,8 @@ Optional LLVM:
 sudo pacman -S --needed clang lldb lld
 ```
 
+> [GCC](https://wiki.archlinux.org/title/GNU_Compiler_Collection) [llvm](https://wiki.archlinux.org/title/LLVM)
+
 ## macOS
 
 ```bash
